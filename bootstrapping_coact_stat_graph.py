@@ -8,6 +8,7 @@ Email: ngurel@mednet.ucla.edu
 Updates: 
     -small bug in coact_stats_path fixed (folder name starts with SpikeXXCoact instead of Spikexxcoact)
     - fixed time limits commented out to get the whole coact_stats. We need interval timestamps for the final version of this
+    - added 'measure' to csv output
     - confirmed running on supercomputer
     
     ------
@@ -263,6 +264,7 @@ for animal in animal_names:
                         
 
 for figure, name in zip(coact_figs, coact_fig_names):
+    
     savefig_pdf_str = name + "_coactivity_stats.pdf"
     coact_path = result_folder_path + "/" + savefig_pdf_str
     figure.savefig(coact_path)
@@ -275,7 +277,7 @@ df_bsstats = pd.DataFrame(bsstats_all)
 df_bsstats.rename(columns = {0 : 'animal', 1 : 'measure', 2: 'exceedance', 3: 'state_threshold', 4 :'mean', 5 :'std', 6 :'lower', 7 :'upper', 8 :'ci_width'}, inplace = True)        
 
 # Reindex column titles
-column_titles = ['animal', 'mean', 'std', 'lower','upper','ci_width','state_threshold','exceedance']
+column_titles = ['animal', 'mean', 'std', 'lower','upper','ci_width','state_threshold','exceedance', 'measure']
 
 df_bsstats = df_bsstats.reindex(columns=column_titles)
 
