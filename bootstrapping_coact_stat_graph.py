@@ -1,5 +1,16 @@
 # -*- coding: utf-8 -*-
 """
+
+Updated by Nil Gurel
+Date: 10/10/2021
+Email: ngurel@mednet.ucla.edu
+
+Updates: 
+    -small bug in coact_stats_path fixed (folder name starts with SpikeXXCoact instead of Spikexxcoact)
+    - fixed time limits commented out to get the whole coact_stats. We need interval timestamps for the final version of this
+    - confirmed running on supercomputer
+    
+    ------
 Created by Sharon Tam
 Date: 10/01/2021
 Github Name:
@@ -67,21 +78,20 @@ def draw_bs_replicates(denom,time,stats,size,threshold):
 
 # In[Get parameter values]:
     
-result_folder_path = 'C:/Users/SmartBox/Desktop/Lab/Renal Results'
-
+result_folder_path = '/media/dal/BigDrive/Renal_Study/Results_Bootstrapping'
 # Parameter values
 state_thr_values = [40, 50, 60, 70, 80, 90]
 event_thr_values = ['0p6', '0p75', '0p9']
 measurements = ['rate', 'std']
 
 # End of Baseline timestamps 
-EndBaseline_Renal = [20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000]
+# EndBaseline_Renal = [20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000]
 
 # End of Baseline linewidth
-lw_EndBaseline = 3
+# lw_EndBaseline = 3
 
 # Get animal names
-animal_folder_path = 'D:/Renal Study/Results_RenalAnimals'
+animal_folder_path = '/media/dal/BigDrive/Renal_Study/Results_RenalAnimals'
 animal_names = os.listdir(animal_folder_path)
 animal_names = sorted(animal_names)
 print(animal_names)
@@ -92,7 +102,7 @@ print(animal_names)
 bsstats_all = list()
 
 # Number of replicates : change to 1000
-num_bs_replicates = 1
+num_bs_replicates = 1000
 
 # Confidence Interval Limits
 lower = 5
@@ -145,7 +155,7 @@ for animal in animal_names:
     
         for event in event_thr_values:
             
-            coact_stats_path = current_path + "/Spike" + measure + "coact_output_1min_20minbuff_" + event + "/coactivity_stats.csv"
+            coact_stats_path = current_path + "/Spike" + measure + "Coact_output_1min_20minbuff_" + event + "/coactivity_stats.csv"
                 #print(coact_stats_path + str(state))
  
             if os.path.exists(coact_stats_path):
@@ -157,10 +167,10 @@ for animal in animal_names:
                 
                 del df
                 
-                # Limit time before end of baseline
-                index = time < EndBaseline_Renal[count]
-                time = time[index]
-                stats = stats[index]
+                # # Limit time before end of baseline
+                # index = time < EndBaseline_Renal[count]
+                # time = time[index]
+                # stats = stats[index]
                 
                 #convert to lists
                 time = time.tolist()
@@ -238,7 +248,7 @@ for animal in animal_names:
                         bsstats_all.append(bsstats_concat)     
                         
                     else:
-                        print(current_animal + "has no transition timestamps for threshold = " + str(threshold))
+                        print(animal + "has no transition timestamps for threshold." )
                         bsstats_concat = [999,999,999,999,999]
                         bsstats_all.append(bsstats_concat)
             
