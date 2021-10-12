@@ -1,5 +1,18 @@
 # -*- coding: utf-8 -*-
 """
+
+Updated by Nil Gurel
+Date: 10/10/2021
+Email: ngurel@mednet.ucla.edu
+
+Updates: 
+    - folder name fixed "Coact"
+    - fixed time limits commented out to get the whole coact_stats. We need interval timestamps for the final version of this
+    - confirmed running on supercomputer
+    -code outputs are here: https://drive.google.com/drive/folders/1mJ2upWTw4Y5qn-1aLmykxzSWWhYSDn7r?usp=sharing
+    
+    ------
+
 Created by Sharon Tam
 Date: 10/06/2021
 Github Name:
@@ -25,10 +38,10 @@ import os
 
 # In[Paths and parameters]:
 
-result_folder_path = 'C:/Users/SmartBox/Desktop/Lab/Renal Results/Optimized state array - renal'
+result_folder_path = '/media/dal/BigDrive/Renal_Study/Results_OptimizedStateArray/'
 
 # Read in bootstrapped event rate csv file    
-df = pd.read_csv("C:/Users/SmartBox/Desktop/Lab/Renal Results/bsstats_RenalAnimals_BS100_EvRate_base.csv")
+df = pd.read_csv("/media/dal/BigDrive/Renal_Study/Results_Bootstrapping/bsstats_RenalAnimals_BS1000_EvRate_base.csv")
 
 # Delete rows with zero event rate
 df = df[df['mean'].notnull()]
@@ -37,13 +50,13 @@ df = df[df['mean'].notnull()]
 grouped = df.groupby(df.animal)
 
 # Get animal names
-animal_folder_path = 'D:/Renal Study/Results_RenalAnimals'
+animal_folder_path = '/media/dal/BigDrive/Renal_Study/Results_RenalAnimals'
 animal_names = os.listdir(animal_folder_path)
 animal_names = sorted(animal_names)
 print(animal_names)
 
 # End of Baseline timestamps 
-EndBaseline_Renal = [20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000]
+# EndBaseline_Renal = [20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000]
 
 # In[Plot state arrays]:
     
@@ -74,7 +87,7 @@ for animal in animal_names:
     print("Best measure: " + best_measure)
     
     # End of Baseline linewidth
-    lw_EndBaseline = 3
+    # lw_EndBaseline = 3
     
     # Formatter
     label_format = '{:,.3f}'
@@ -90,7 +103,7 @@ for animal in animal_names:
     # while >Thr is observed, record only until we go below
     
     # Read in stats for best exceedance
-    stats_path = animal_folder_path + "/" + animal + "/Spike" + best_measure + "coact_output_1min_20minbuff_" + best_exc_thr + "/coactivity_stats.csv"
+    stats_path = animal_folder_path + "/" + animal + "/Spike" + best_measure + "Coact_output_1min_20minbuff_" + best_exc_thr + "/coactivity_stats.csv"
     if os.path.exists(stats_path):
         df = pd.read_csv(stats_path)
         time = df['time']
@@ -113,15 +126,15 @@ for animal in animal_names:
         # Plot state array
         ax.plot(time/3600, state_array ,'--', color = 'dodgerblue', alpha=0.8)
         ax.set_xticks(np.array(transition_timestamp)/3600)
-        ax.set_xlim(time[0]/3600, EndBaseline_Renal[count]/3600) #limiting to baseline data only
-        ax.axvline(x = EndBaseline_Renal[count]/3600, color = 'black', linewidth = lw_EndBaseline) #full exp, mark end of baseline for each
+        # ax.set_xlim(time[0]/3600, EndBaseline_Renal[count]/3600) #limiting to baseline data only
+        # ax.axvline(x = EndBaseline_Renal[count]/3600, color = 'black', linewidth = lw_EndBaseline) #full exp, mark end of baseline for each
         ax.tick_params(axis = "x", labelsize=3)
         ax.set_yticks([0,1])    
         ax.spines["top"].set_visible(False)  
         ax.spines["right"].set_visible(False)  
         ax.spines["bottom"].set_visible(False)  
         ax.set_ylabel(animal, fontsize=16)
-        ax.set_xlabel('Baseline time (hours)', fontsize=16)
+        ax.set_xlabel('Experiment time (hours)', fontsize=16)
 
         # Save state array plot
         str_state_savefig_pdf = animal + "_PDF_" + best_measure + "_" + best_exc_thr + "_" + str(best_state_thr) + "_StateArray_fullexp.pdf"

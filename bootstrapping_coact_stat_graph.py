@@ -2,7 +2,7 @@
 """
 
 Updated by Nil Gurel
-Date: 10/10/2021
+Date: 10/11/2021
 Email: ngurel@mednet.ucla.edu
 
 Updates: 
@@ -10,6 +10,7 @@ Updates:
     - fixed time limits commented out to get the whole coact_stats. We need interval timestamps for the final version of this
     - added 'measure' to csv output
     - confirmed running on supercomputer
+     - code outputs are here: https://drive.google.com/drive/folders/1aqsEulm35C_svLISZmUMnf-8WBS8mtWi?usp=sharing
     
     ------
 Created by Sharon Tam
