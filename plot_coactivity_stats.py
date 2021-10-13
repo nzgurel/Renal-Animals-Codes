@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 Created by Diana Ly
-Date: October 8,2021       GitHub name: lydiana90         Email: lydiana@ucla.edu
+Date: October 13,2021       GitHub name: lydiana90         Email: lydiana@ucla.edu
 
 Cofluctuation plotting code
 -This code reads coact_stats.csv from each animal’s directory and plots the cofluctuation time series at each threshold and mean/STD.
 -Created plots are in this google drive link: https://drive.google.com/drive/folders/1MHeR1wLAhP6u5pVfXbGz1_8t7SHgskIA?usp=sharing
+- red plots are RA ablation animals, grey are control animals and blue are ARG ablation
 
 """
 # In[ ]:
@@ -23,7 +24,7 @@ import matplotlib.ticker as mticker
 # In[ ]: INPUT PARAMETERS HERE
 
 #rate or std
-measure = "rate"
+measure = "std"
 
 #cofluctuation threshold: 0p6, 0p75, 0p9 (6, 75, 9)
 cofluctuation = "9"
@@ -61,7 +62,37 @@ for filename in filenames:
     current_path = data_folder_path + '/' + filename
     # print(current_path)
     current_animal = current_path.split("pig")[1] #obtain just the animal name without the "pig"
+    
+    if current_animal == "199929" or current_animal == "199924": #control animals
+        current_color = 'slategrey'
+    elif current_animal == "8343" or current_animal =="199923RenalAbl" or current_animal =="9640" or current_animal =="10153RenalAbl" or current_animal =="8342": #RA ablation
+        current_color = 'crimson'
+    else: #ARG ablation
+        current_color = 'steelblue'
+        
+        
+    #is animal VF?
+    if current_animal == "199924":
+        VF = 1 #yes, in VF
+        VF_time = 26952
+    elif current_animal == "8343":
+        VF = 1
+        VF_time = 30562
+    elif current_animal == "199923RenalAbl": 
+        VF = 1
+        VF_time = 30159
+    elif current_animal == "9640": 
+        VF = 1
+        VF_time = 23641
+    elif current_animal == "10648":
+        VF = 1 
+        VF_time = 32976
+    else:
+        VF = 0 #not in VF
+        
+    
 
+        
     #target measurement
     measurement_folder_name = "Spike" + measure + "Coact_output_1min_20minbuff_0p" + cofluctuation
     # print(measurement_folder_name)    
@@ -77,8 +108,11 @@ for filename in filenames:
     stats = df['coactivity_stat']    
     
     #plot the graphs for each animal
-    ax[count].plot(time, stats, '--', color = 'dodgerblue')
+    ax[count].plot(time, stats, '--', color = current_color)
     # ax.tick_params(axis = "x", labelsize=3)
+    #if the animal is in VF then plot the vertical line at the timestamp
+    if VF == 1:
+        ax[count].axvline(x = VF_time, linewidth = 5, color = 'green' )
     ax[count].spines["top"].set_visible(False)  
     ax[count].spines["right"].set_visible(False)  
     ax[count].spines["bottom"].set_visible(False)  
