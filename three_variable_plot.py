@@ -10,7 +10,7 @@ Three variable plots with optimum values
 -This code reads bsstats_RenalAnimals_BS100_EvRate_base.csv from the bootstrapping_coact_stats_graph.py to plot cofluctuation(exceedance), state threshold,
 and CI widths to find the narrowest CI width.
 
--Created plots are in this google drive link:
+-Created plots are in this google drive link: https://drive.google.com/drive/folders/1xAHxpKK0xQ_E1a3C4fvNuDUqiFxydGyD?usp=sharing
     
 """
 
@@ -56,10 +56,10 @@ num_cols = 1
     
 # Create figures (one for each measure)
 fig_rate = plt.figure(figsize = (30, 150))
-rate_title = "Optimum Cofluctuation and State Threshold for Minimum CI Width (MEAN)"
+rate_title = "Optimum Cofluctuation and State Threshold for Minimum CI Width (MEAN) - Renal Animals"
 fig_rate.suptitle(rate_title, fontsize = 30)
 fig_std = plt.figure(figsize = (30, 150))
-std_title = "Optimum Cofluctuation and State Threshold for Minimum CI Width (STD)"
+std_title = "Optimum Cofluctuation and State Threshold for Minimum CI Width (STD) - Renal Animals"
 fig_std.suptitle(std_title, fontsize = 30)
 
 fig_rate.subplots_adjust(top = 0.95)
