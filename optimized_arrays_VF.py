@@ -186,7 +186,7 @@ VF_animals_nil = ['pig10648','pig199923RenalAbl','pig199924','pig8343','pig9640'
 VF_animals_yuichi =    ['pig10153RenalAbl','pig10648','pig199923RenalAbl','pig199929','pig8343','pig9640']
     
     
-# In[optimized array figures figures]: 
+# In[optimized array figures]: 
 
 # state array big 2 plots
 fig_rate, ax_rate = plt.subplots(figsize = (20,10), nrows = len(animal_names), ncols = 1)
@@ -293,11 +293,11 @@ for index, row in df_thresholds.iterrows():
     
 # In[ Save figures ]:
     
-savefig_pdf_str_rate = "OptimizedStateArrays_mean_VF_animals_yuichi.png"
+savefig_pdf_str_rate = "20pStateArrays_mean_VF_animals_yuichi.png"
 save_path_rate = result_folder_path + "/" + savefig_pdf_str_rate
 fig_rate.savefig(save_path_rate)
 
-savefig_pdf_str_std = "OptimizedStateArrays_std_VF_animals_yuichi.png"
+savefig_pdf_str_std = "20pStateArrays_std_VF_animals_yuichi.png"
 save_path_std = result_folder_path + "/" + savefig_pdf_str_std
 fig_std.savefig(save_path_std)    
     
