@@ -26,7 +26,7 @@ import os
 
 # In[Set paths and format data]:
 
-result_folder_path = 'C:/Users/SmartBox/Desktop/Lab/Renal Results/Three Variable Plots'
+result_folder_path = 'C:/Users/SmartBox/Desktop/Lab/Results 10_20/Three Variable Plots'
 
 # Read in bootstrapped event rate csv file    
 df = pd.read_csv("C:/Users/SmartBox/Desktop/Lab/Renal Results/bsstats_RenalAnimals_BS100_EvRate_base.csv")
@@ -43,14 +43,13 @@ print(df.head())
 # Group data by animal
 grouped = df.groupby(df.animal)
 
-# Get animal names
-animal_folder_path = 'D:/Renal Study/Results_RenalAnimals'
-animal_names = os.listdir(animal_folder_path)
-animal_names = sorted(animal_names)
-print(animal_names)
+animal_types = ['VF', 'Normal']
+color_codes = ['magenta', 'blue']
 
 measures = ['rate', 'std']
 num_cols = 1
+
+total_animals = 11
 
 # In[Plot figures]:
     
@@ -70,58 +69,66 @@ fig_std.tight_layout()
 figures = [fig_rate, fig_std]
 
 count = 1
-for animal in animal_names:
+for animal_type, type_color in zip(animal_types, color_codes):
     
-    current_animal = grouped.get_group(animal)
-    measure_group = current_animal.groupby('measure')
-    #print(current_animal)
+    # Get animal names
+    animal_folder_path = 'D:/Renal Study/Results_RenalAnimals/' + animal_type + "Animals"
+    animal_names = os.listdir(animal_folder_path)
+    animal_names = sorted(animal_names)
+    print(animal_names)
     
-
-    for measure in measures:
+    for animal in animal_names:
         
-        if (measure == 'rate'):
-            measure_term = 'mean'
-            fig_count = 0
-        else:
-            measure_term = 'std'
-            fig_count = 1
+        current_animal = grouped.get_group(animal)
+        measure_group = current_animal.groupby('measure')
+        #print(current_animal)
         
-        # Get data for correct measure
-        current_animal_measure = measure_group.get_group(measure)
     
-        interval_width = current_animal_measure['ci_width']
-        state_thr = current_animal_measure['state_threshold']
-        cofluctuation = current_animal_measure['exceedance']
+        for measure in measures:
+            
+            if (measure == 'rate'):
+                measure_term = 'mean'
+                fig_count = 0
+            else:
+                measure_term = 'std'
+                fig_count = 1
+            
+            # Get data for correct measure
+            current_animal_measure = measure_group.get_group(measure)
         
-        # Find narrowest confidence interval and the optimal thresholds at nonzero event rate
-        min_index = interval_width.idxmin()
-        min_width = interval_width[min_index]
-        
-        best_state_thr = state_thr[min_index]
-        best_cofluc = cofluctuation[min_index]
-        
-        # Remove minimum values from all series
-        state_thr = state_thr.drop(min_index)
-        cofluctuation = cofluctuation.drop(min_index)
-        interval_width = interval_width.drop(min_index)
-        
-        ax_title = animal + "_" + measure_term + " Optimum Cofluctuation and \nState Threshold for Minimum CI Width (C:" + str(best_cofluc) + ", T:" + str(best_state_thr) + ", CI:" + str(round(min_width, 4)) + ")"
-        
-        # Create figure
-        ax = figures[fig_count].add_subplot(len(animal_names), num_cols, count, projection='3d')
-        
-        # Plot data, different color for minimum value
-        ax.scatter(state_thr, cofluctuation, interval_width, linewidths=1, alpha=.7, edgecolor='k', s = 250, c = 'blue')
-        ax.scatter(best_state_thr, best_cofluc, min_width, linewidths=1, alpha=.7, edgecolor='k', s = 250, c = 'red')
-        ax.set_yticks([0.6, 0.75 ,0.9])
-        ax.set_title(ax_title, fontsize = 20)
-        ax.set_xlabel('State Threshold', fontsize = 15)
-        ax.set_ylabel('Cofluctuation', fontsize = 15)
-        ax.set_zlabel('CI Width', fontsize = 15, labelpad = 10)
-        plt.show()
-        
-    count = count + 1
-        
+            interval_width = current_animal_measure['ci_width']
+            state_thr = current_animal_measure['state_threshold']
+            cofluctuation = current_animal_measure['exceedance']
+            
+            # Find narrowest confidence interval and the optimal thresholds at nonzero event rate
+            min_index = interval_width.idxmin()
+            min_width = interval_width[min_index]
+            
+            best_state_thr = state_thr[min_index]
+            best_cofluc = cofluctuation[min_index]
+            
+            # Remove minimum values from all series
+            state_thr = state_thr.drop(min_index)
+            cofluctuation = cofluctuation.drop(min_index)
+            interval_width = interval_width.drop(min_index)
+            
+            ax_title = animal + "_" + measure_term + "_" + animal_type + "_" + " Optimum Cofluctuation and \nState Threshold for Minimum CI Width (C:" + str(best_cofluc) + ", T:" + str(best_state_thr) + ", CI:" + str(round(min_width, 4)) + ")"
+            
+            # Create figure
+            ax = figures[fig_count].add_subplot(total_animals, num_cols, count, projection='3d')
+            
+            # Plot data, different color for minimum value
+            ax.scatter(state_thr, cofluctuation, interval_width, linewidths=1, alpha=.7, edgecolor='k', s = 250, c = type_color)
+            ax.scatter(best_state_thr, best_cofluc, min_width, linewidths=1, alpha=.7, edgecolor='k', s = 250, c = 'red')
+            ax.set_yticks([0.6, 0.75 ,0.9])
+            ax.set_title(ax_title, fontsize = 20)
+            ax.set_xlabel('State Threshold', fontsize = 15)
+            ax.set_ylabel('Cofluctuation', fontsize = 15)
+            ax.set_zlabel('CI Width', fontsize = 15, labelpad = 10)
+            plt.show()
+            
+        count = count + 1
+            
 # Save figures as pdf
 savefig_pdf_str = "RenalStudy_Mean_three_var_plots.pdf"
 save_path = result_folder_path + "/" + savefig_pdf_str
