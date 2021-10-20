@@ -1,5 +1,7 @@
 """
 Updated by Nil
+Date: October 18,2021       GitHub name: nzgurel         Email: ngurel@mednet.ucla.edu
+
 
 -added color groups ccording to VF (crimson) vs. non-VF (blue)
 -increased some fontsizes
@@ -47,7 +49,9 @@ filenames = [f for f in filenames if (f.startswith("pig"))] #get only the filena
 filenames = sorted(filenames)
 print(filenames) 
 
-
+VF_animals_yuichi =    ['pig10153RenalAbl','pig10648','pig199923RenalAbl','pig199929','pig8343','pig9640']
+color_VF = 'hotpink'
+color_nonVF = 'royalblue'
 
 # In[ ]:
 
@@ -64,8 +68,8 @@ for filename in filenames:
     
     current_path = data_folder_path + '/' + filename
     # print(current_path)
-    current_animal = current_path.split("pig")[1] #obtain just the animal name without the "pig"
-    
+    # current_animal = current_path.split("pig")[1] #obtain just the animal name without the "pig"
+    current_animal = filename
     # #3 groups 
     ########################################## UNCOMMENT IF NECESSARY #######################################################
     # if current_animal == "199929" or current_animal == "199924": #control animals
@@ -75,31 +79,38 @@ for filename in filenames:
     # else: #ARG ablation
     #     current_color = 'salmon'
       ########################################## UNCOMMENT IF NECESSARY #######################################################
-      
-        
-    #is animal VF?
-    if current_animal == "199924":
-        VF = 1 #yes, in VF
-        VF_time = 26952
-    elif current_animal == "8343":
-        VF = 1
-        VF_time = 30562
-    elif current_animal == "199923RenalAbl": 
-        VF = 1
-        VF_time = 30159
-    elif current_animal == "9640": 
-        VF = 1
-        VF_time = 23641
-    elif current_animal == "10648":
-        VF = 1 
-        VF_time = 32976
+
+    # detect VF animals
+    if current_animal in VF_animals_yuichi:
+    # if current_animal in VF_animals_nil:
+        # print("current animal is VF")
+        color_array = color_VF
     else:
-        VF = 0 #not in VF
+        color_array = color_nonVF
         
-    if VF == 1:
-        current_color = 'crimson'
-    else:
-        current_color = 'royalblue'
+    # #is animal VF?
+    # if current_animal == "199924":
+    #     VF = 1 #yes, in VF
+    #     VF_time = 26952
+    # elif current_animal == "8343":
+    #     VF = 1
+    #     VF_time = 30562
+    # elif current_animal == "199923RenalAbl": 
+    #     VF = 1
+    #     VF_time = 30159
+    # elif current_animal == "9640": 
+    #     VF = 1
+    #     VF_time = 23641
+    # elif current_animal == "10648":
+    #     VF = 1 
+    #     VF_time = 32976
+    # else:
+    #     VF = 0 #not in VF
+        
+    # if VF == 1:
+    #     current_color = 'crimson'
+    # else:
+    #     current_color = 'royalblue'
         
         
     #target measurement
@@ -117,11 +128,11 @@ for filename in filenames:
     stats = df['coactivity_stat']    
     
     #plot the graphs for each animal
-    ax[count].plot(time, stats, '--', color = current_color)
+    ax[count].plot(time, stats, '--', color = color_array)
     # ax.tick_params(axis = "x", labelsize=3)
-    #if the animal is in VF then plot the vertical line at the timestamp
-    if VF == 1:
-        ax[count].axvline(x = VF_time, linewidth = 5, color = 'green' )
+    # if the animal is in VF then plot the vertical line at the timestamp
+    # if VF == 1:
+    #     ax[count].axvline(x = VF_time, linewidth = 5, color = 'green' )
     ax[count].spines["top"].set_visible(False)  
     ax[count].spines["right"].set_visible(False)  
     ax[count].spines["bottom"].set_visible(False)  
@@ -135,6 +146,6 @@ for filename in filenames:
 result_filename = "cofluctuation" + "Spike" + measure + "0p" + cofluctuation
 # result_path = os.path.join(result_folder_path, result_filename) #changed this to below line as it adds a reverse slash in windows
 result_path = result_folder_path +  '/' + result_filename
-result_path = result_path + "_VFgroups.pdf"
+result_path = result_path + "_VFgroups.png"
 plt.savefig(result_path)
     
